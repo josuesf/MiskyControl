@@ -1,0 +1,36 @@
+{
+  "name": "miskycontrol",
+  "version": "1.0.0",
+  "description": "control mesas",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js",
+    "postinstall": "install-app-deps",
+    "pack": "build",
+    "dist": "build"
+  },
+  "build":{
+    "appId":"com.josuesf.appcontrolmisky",
+    "productName":"Control Mesas Misky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josuesf/MiskyControl.git"
+  },
+  "author": "Josue Farfan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "md5": "^2.2.1",
+    "mssql": "^3.3.0",
+    "multer": "^1.3.0",
+    "node-thermal-printer": "^2.0.0",
+    "socket.io": "^1.4.4"
+  },
+  "devDependencies": {
+    "electron-builder": "^19.48.3",
+    "electron-winstaller": "^2.6.3",
+    "electron": "^1.6.6",
+    "electron-prebuilt": "^1.4.13"
+  }
+}
