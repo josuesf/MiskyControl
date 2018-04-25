@@ -9,9 +9,9 @@
     "pack": "build",
     "dist": "build"
   },
-  "build":{
-    "appId":"com.josuesf.appcontrolmisky",
-    "productName":"Control Mesas Misky"
+  "build": {
+    "appId": "com.josuesf.appcontrolmisky",
+    "productName": "Control Mesas Misky"
   },
   "repository": {
     "type": "git",

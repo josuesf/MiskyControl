@@ -246,6 +246,7 @@ var executeSP_Guardar_Comanda = function (res, store_procedure, param) {
 			request.input('Numero', param.Numero)
 			request.input('Nom_Cliente', param.Nom_Cliente)
 			request.input('Cod_Moneda', param.Cod_Moneda)
+			request.input('Cod_Usuario', param.Cod_Vendedor)
 			request.input('Total', sql.Numeric(38, 2), param.Total)
 			request.execute(store_procedure, function (err, result) {
 				dbConn.close()
@@ -257,6 +258,7 @@ var executeSP_Guardar_Comanda = function (res, store_procedure, param) {
 					Numero = result[0][0].Numero
 					//ImpresionNotaVenta(param, Numero)
 					//Fin de Impresion
+					io.sockets.emit('NUEVA_COMANDA', { Cod_Mesa: param.Cod_Mesa, Cod_Usuario: param.Cod_Vendedor, Numero: param.Numero, Estado_Mesa: param.Estado_Mesa })
 					executeSP_Guardar_EstadoMesa(res, 'USP_VIS_MESAS_GXEstado', param.Cod_Mesa, param.Estado_Mesa, param.Cod_Vendedor)
 					executeSP_Guardar_Comanda_Detalle(res, 'USP_CAJ_COMPROBANTE_D_COMANDA_G', param.Productos, Numero, 0)
 				}
@@ -617,12 +619,12 @@ app.post('/Liberar_Terminar_Mesa', function (req, res) {
 	const Cod_Mesa = req.body.Cod_Mesa
 	const Numero = req.body.Numero
 	const Cod_Vendedor = req.body.Cod_Vendedor
-	executeSP_LIBERAR_MESA(res, 'USP_CAJ_COMANDA_LIBERAR', {Cod_Mesa,Numero,Cod_Vendedor})
+	executeSP_LIBERAR_MESA(res, 'USP_CAJ_COMANDA_LIBERAR', { Cod_Mesa, Numero, Cod_Vendedor })
 })
 app.post('/Cancelar_Mesa_Pedido', function (req, res) {
 	const Cod_Mesa = req.body.Cod_Mesa
 	const Numero = req.body.Numero
-	executeSP_CANCELAR_PEDIDO_MESA(res, 'USP_CAJ_COMANDA_CANCELAR_Pedido', {Cod_Mesa,Numero})
+	executeSP_CANCELAR_PEDIDO_MESA(res, 'USP_CAJ_COMANDA_CANCELAR_Pedido', { Cod_Mesa, Numero })
 })
 
 
