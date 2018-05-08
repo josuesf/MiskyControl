@@ -8,60 +8,420 @@
     <!----------------------- materialize style ------------------>
     <link href="assets/css/materialize.css" rel="stylesheet" />
     <link href="assets/css/fakeLoader.css" rel="stylesheet" />
+
 </head>
 
 <body>
     <div class="fakeloader"></div>
-    <nav class="nav-form">
-        <div class="nav-wrapper div-nav" style="background-color:#ef6d13">
-            <a href="#!" style="margin-left:10px">
-                <b> CONTROL MESAS MISKY</b>
-            </a>
-            <ul class="right">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper" style="background-color:#2c2c54">
+                <a href="#!" class="brand-logo" style="padding-left: 10px; "> Logo</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li>
+                        <a>
+                            <i class="material-icons">remove</i>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <i class="material-icons">check_box_outline_blank</i>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <i class="material-icons">clear</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper" style="background-color:#2c2c54">
+        
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a href="#">Incio</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-button" href="#!" data-activates="Opciones">Configuracion
+                            <i class="material-icons right">arrow_drop_down</i>
+                        </a>
+                        <ul id="Opciones" class="dropdown-content">
+                            <li>
+                                <a href="#!">Productos</a>
+                            </li>
+                            <li>
+                                <a href="#!">Mesas</a>
+                            </li>
+                            <li>
+                                <a href="#!">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Dropdown Trigger -->
+                    <li>
+                        <a class="dropdown-button" href="#!" data-activates="sesion">Usuario
+                            <i class="material-icons right">arrow_drop_down</i>
+                        </a>
+                        <ul id="sesion" class="dropdown-content">
+                            <li>
+                                <a href="#!">Salir</a>
+                            </li>
+                            <li>
+                                <a href="#!">Ver Perfil</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="row">
 
-                <li>
-                    <a href="#!" id="min-btn">
-                        <i class="material-icons" style="height: 50px;line-height: 50px;">remove</i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!" id="max-btn">
-                        <i class="material-icons" style="height: 50px;line-height: 50px;">crop_free</i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#!" id="close-btn">
-                        <i class="material-icons" style="height: 50px;line-height: 50px;">close</i>
-                    </a>
-                </li>
-            </ul>
+        <div class="col s3">
+            <div class="collection">
+                <a href="#!" class="collection-item active">Todos</a>
+                <a href="#!" class="collection-item">Nuevo Producto</a>
+                <a href="#!" class="collection-item">Relaciones Producto</a>
+            </div>
         </div>
-    </nav>
-    <div id="wrapper">
-        <div class="">
-            <br>
-            <div class="row offset-s3">
-                <div class="col s6 offset-s2">
-                    <img src="assets/img/logo.png" alt="">
+
+        <div class="col s9">
+            <h5 class="header">Nuevo Pedido</h5>
+            <div class="row">
+                <div class="col s12 m8">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">filter_drama</i>Comidas</div>
+                            <div class="collapsible-body">
+                                <table class="">
+                                    <tbody>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>10</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">place</i>Bebidas Frias</div>
+                            <div class="collapsible-body">
+                                <span>Lorem ipsum dolor sit amet.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">whatshot</i>Bebidas Calientes</div>
+                            <div class="collapsible-body">
+                                <span>Lorem ipsum dolor sit amet.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 m4">
+                    <div class="card indigo lighten-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">Pedido</span>
+                            <table class="">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Descripcion</th>
+                                        <th>SubT.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Eclair asdasdsa</td>
+                                        <td>$0.87</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Jellybean Jellybean Jellybean</td>
+                                        <td>$3.76</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td>
+                                        <td>Lollipop</td>
+                                        <td>$7.00</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>20</td>
+                                        <td>KitKat</td>
+                                        <td>$9.99</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-action">
+                            <a href="#">Cancelar</a>
+                            <a href="#">Confirmar</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <h5 class="header">Inicio</h5>
             <div class="row">
-                <h3 class="center-align" style="color:#f60606">Porfavor, no cerrar esta ventana.</h3>
+                <div class="col s12 m3">
+                    <div class="card teal accent-4">
+                        <div class="card-content white-text">
+                            <span class="card-title">Mesa 01</span>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="white-text">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card teal accent-4">
+                        <div class="card-content white-text">
+                            <span class="card-title">Mesa 02</span>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="white-text">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card red lighten-3">
+                        <div class="card-content white-text">
+                            <span class="card-title">Mesa 03</span>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="white-text">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card teal accent-4">
+                        <div class="card-content white-text">
+                            <span class="card-title">Mesa 04</span>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="white-text">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card teal accent-4">
+                        <div class="card-content white-text">
+                            <span class="card-title">Mesa 05</span>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="white-text">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <h5 class="header">Nuevo Producto</h5>
+            <div class="card horizontal">
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input placeholder="Placeholder" id="first_name" type="text" class="validate">
+                                    <label for="first_name" class="active">First Name</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="last_name" type="text">
+                                    <label for="last_name">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input disabled="" value="I am not editable" id="disabled" type="text" class="validate">
+                                    <label for="disabled" class="active">Deshabilitado</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="password" type="password" class="validate">
+                                    <label for="password">Password</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="email" type="email" class="validate">
+                                    <label for="email" data-error="wrong" data-success="right">Email</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">This is an inline input field:
+                                    <div class="input-field inline">
+                                        <input id="email" type="email" class="validate">
+                                        <label for="email" data-error="wrong" data-success="right">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                <input name="group1" type="radio" id="test1" />
+                                <label for="test1">Red</label>
+                            </p>
+                        </form>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">Guardar</a>
+                    </div>
+                </div>
+            </div>
+            <h4 class="header">Lista Productos</h4>
+            <div class="card horizontal">
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Item Name</th>
+                                    <th>Item Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Alvin</td>
+                                    <td>Eclair</td>
+                                    <td>$0.87</td>
+                                </tr>
+                                <tr>
+                                    <td>Alan</td>
+                                    <td>Jellybean</td>
+                                    <td>$3.76</td>
+                                </tr>
+                                <tr>
+                                    <td>Jonathan</td>
+                                    <td>Lollipop</td>
+                                    <td>$7.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Shannon</td>
+                                    <td>KitKat</td>
+                                    <td>$9.99</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul class="pagination">
+                            <li class="disabled">
+                                <a href="#!">
+                                    <i class="material-icons">chevron_left</i>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#!">1</a>
+                            </li>
+                            <li class="waves-effect">
+                                <a href="#!">2</a>
+                            </li>
+                            <li class="waves-effect">
+                                <a href="#!">3</a>
+                            </li>
+                            <li class="waves-effect">
+                                <a href="#!">4</a>
+                            </li>
+                            <li class="waves-effect">
+                                <a href="#!">5</a>
+                            </li>
+                            <li class="waves-effect">
+                                <a href="#!">
+                                    <i class="material-icons">chevron_right</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">Guardar</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
     <script>window.$ = window.jQuery = require('./assets/js/jquery.min.js');</script>
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="assets/js/materialize.min.js"></script>
     <script src="assets/js/fakeLoader.js"></script>
     <script type="text/javascript">
         $(".fakeloader").fakeLoader({
-            timeToHide: 5000,
+            timeToHide: 1000,
             spinner: "spinner1",
-            bgColor: "#ef6d13"
+            bgColor: "#2c2c54"
             //imagePath:"yourPath/customizedImage.gif"
         });
+        $(document).ready(function () {
+            $(".dropdown-button").dropdown();
+        })
     </script>
-    <script src="assets/js/materialize.min.js"></script>
+    <!-- <script src="public/app.js"></script> -->
 </body>
 
 </html>

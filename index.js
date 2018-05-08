@@ -16,16 +16,16 @@ app.on('ready', function () {
   //const { width, height } = require('electron').screen.getPrimaryDisplay().workAreaSize;
 
   mainWindow = new BrowserWindow({
-    width: 800,//width,
+    width: 1200,//width,
     height: 800,//height,
     minHeight: 800,
-    minWidth: 800,
-    maxHeight:800,
-    maxWidth:800,
-    frame: false,
+    minWidth: 1200,
+    // maxHeight:800,
+    // maxWidth:800,
+    frame: true,
   });
 
-  mainWindow.setMenu(null);
+  //mainWindow.setMenu(null);
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
@@ -33,5 +33,5 @@ app.on('ready', function () {
     mainWindow = null;
   });
 
-  //mainWindow.toggleDevTools()
+  mainWindow.toggleDevTools()
 });
