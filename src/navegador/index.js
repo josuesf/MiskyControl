@@ -2,13 +2,15 @@ var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from '../productos'
 import { inicio } from '../inicio'
+import { sub_navegador } from '../sub_navegador'
+import { login } from '../login'
 function Ver(login) {
     var el = login ? yo`
         <nav>
             <div class="nav-wrapper" style="background-color:#2c2c54">
                 <ul class="right hide-on-med-and-down">
                     <li>
-                        <a onclick="${()=>inicio()}">Incio</a>
+                        <a onclick="${() => inicio()}">Incio</a>
                     </li>
                     <li>
                         <a class="dropdown-button" href="#!" data-activates="Opciones">Configuracion
@@ -16,7 +18,7 @@ function Ver(login) {
                         </a>
                         <ul id="Opciones" class="dropdown-content">
                             <li>
-                                <a onclick="${()=>productos()}">Productos</a>
+                                <a onclick="${() => productos()}">Productos</a>
                             </li>
                             <li>
                                 <a href="#!">Mesas</a>
@@ -33,7 +35,7 @@ function Ver(login) {
                         </a>
                         <ul id="sesion" class="dropdown-content">
                             <li>
-                                <a href="#!">Salir</a>
+                                <a onclick="${() => CerrarSesion()}">Salir</a>
                             </li>
                             <li>
                                 <a href="#!">Ver Perfil</a>
@@ -48,7 +50,12 @@ function Ver(login) {
     $(".dropdown-button").dropdown();
 }
 
-var no_login = yo``;
+function CerrarSesion() {
+    Ver()
+    sub_navegador()
+    login()
+}
+
 function navegador(login) {
     Ver(login)
 }

@@ -22,7 +22,7 @@ app.on('ready', function () {
     minWidth: 1100,
     // maxHeight:800,
     // maxWidth:800,
-    frame: true,
+    frame: false,
   });
 
   //mainWindow.setMenu(null);

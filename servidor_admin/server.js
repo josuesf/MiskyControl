@@ -540,8 +540,25 @@ function ImpresionNotaVenta(param, Numero) {
 	});
 }
 app.get('/', function (req, res) {
-	res.send('running')
+	const db = require('../connectionbd')
+	db.query('SELECT * FROM account', [], (err, r) => {
+		if (err) {
+			return next(err)
+		}
+		res.send(r.rows)
+	})
 });
+app.post('/login_', function (req, res) {
+	//call Model account
+	const account = require('./models/account')
+	//set params
+	const params = { username: req.body.username, password: req.body.password }
+	//call Model.login function
+	account.login(params, function (err, account) {
+		if (err) return res.json({err})
+		return res.json({account})
+	})
+})
 app.post('/api/photo', function (req, res) {
 	upload(req, res, function (err) {
 		if (err) {
