@@ -256,7 +256,7 @@ var executeSP_Guardar_Comanda = function (res, store_procedure, param) {
 				}
 				else {
 					Numero = result[0][0].Numero
-					//ImpresionNotaVenta(param, Numero)
+					ImpresionComanda(param, Numero)
 					//Fin de Impresion
 					io.sockets.emit('NUEVA_COMANDA', { Cod_Mesa: param.Cod_Mesa, Cod_Usuario: param.Cod_Vendedor, Numero: param.Numero, Estado_Mesa: param.Estado_Mesa })
 					executeSP_Guardar_EstadoMesa(res, 'USP_VIS_MESAS_GXEstado', param.Cod_Mesa, param.Estado_Mesa, param.Cod_Vendedor)
@@ -427,11 +427,13 @@ var executeSP_CANCELAR_PEDIDO_MESA = function (res, store_procedure, param) {
 	});
 }
 function ImpresionComanda(param, Numero) {
+	const Productos = param.Productos.filter(p => (parseInt(p.Id_Referencia) == 0 || !p.Id_Referencia))
+	var ProductosDetalles = param.Productos.filter(p => parseInt(p.Id_Referencia) != 0)
 	//Impresion de Comanda
 	var printer = require("node-thermal-printer");
 	printer.init({
 		type: 'epson',
-		interface: '//192.168.1.249/EPSON-TM-T20II',
+		interface: 'tcp://192.168.1.189',
 		characterSet: 'SPAIN1',
 	});
 	//printer.setTypeFontB(); 
@@ -459,12 +461,31 @@ function ImpresionComanda(param, Numero) {
 
 	printer.drawLine();
 	printer.bold(false);
+	for (i = 0; i < Productos.length; i++) {
+		var found = ProductosDetalles.find(p => parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle));
+		if (found) {
+			printer.tableCustom([
+				{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
+				{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
+			]);
+			ProductosDetalles = ProductosDetalles.filter(p => {
+				if (parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle)) {
+					printer.tableCustom([
+						{ text: "", align: "LEFT", width: 0.15 },
+						{ text: p.Cantidad + " " + p.Nom_Producto, align: "LEFT", width: 0.75 }
+					]);
+					return null
+				} else {
+					return p
+				}
+			})
+		} else {
+			printer.tableCustom([
+				{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
+				{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
+			]);
+		}
 
-	for (i = 0; i < param.Productos.length; i++) {
-		printer.tableCustom([
-			{ text: param.Productos[i].Cantidad, align: "LEFT", width: 0.15 },
-			{ text: param.Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
-		]);
 	}
 	printer.cut();
 	printer.execute(function (err) {
@@ -477,67 +498,97 @@ function ImpresionComanda(param, Numero) {
 	});
 }
 function ImpresionNotaVenta(param, Numero) {
+	const Productos = param.Productos.filter(p => (parseInt(p.Id_Referencia) == 0 || !p.Id_Referencia))
+	var ProductosDetalles = param.Productos.filter(p => parseInt(p.Id_Referencia) != 0)
 	//Impresion de Comanda
 	var printer = require("node-thermal-printer");
 	printer.init({
 		type: 'epson',
-		interface: '//192.168.1.249/EPSON-TM-T20II',
-		characterSet: 'SPAIN1',
+		interface: 'tcp://192.168.1.189',
 	});
 	//printer.setTypeFontB(); 
 	printer.alignCenter()
-	printer.bold(true);
-	printer.setTextQuadArea();
-	printer.println("MISKY")
-	printer.bold(false);
-	printer.setTextNormal();
-	printer.drawLine();
-	printer.println("Orden: " + Numero)
-	printer.println("MESA : " + param.Cod_Mesa)
-	printer.println("VENDEDOR : " + param.Cod_Vendedor)
-	d = new Date()
-	day = d.getDate(); month = d.getMonth() + 1; year = d.getFullYear()
-	h = d.getHours(); m = d.getMinutes(); s = d.getSeconds()
-	fecha_hora_actual = (day < 10 ? "0" + day : day) + "-" + (month < 10 ? "0" + month : month) + "-" + year + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
+	printer.printImage('./assets/img/misky192.png', function (done) {
+		printer.setTextNormal();
+		printer.drawLine();
+		printer.println("Orden: " + Numero)
+		printer.println("MESA : " + param.Cod_Mesa)
+		printer.println("VENDEDOR : " + param.Cod_Vendedor)
+		d = new Date()
+		day = d.getDate(); month = d.getMonth() + 1; year = d.getFullYear()
+		h = d.getHours(); m = d.getMinutes(); s = d.getSeconds()
+		fecha_hora_actual = (day < 10 ? "0" + day : day) + "-" + (month < 10 ? "0" + month : month) + "-" + year + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
 
-	printer.println(fecha_hora_actual)
-	printer.newLine();
-	//Impresion de Nota de Venta
-	printer.tableCustom([
-		{ text: "Cant.", align: "LEFT", width: 0.15, bold: true },
-		{ text: "Descripcion", align: "LEFT", width: 0.45, bold: true },
-		{ text: "P.U", align: "LEFT", width: 0.10, bold: true },
-		{ text: "SubT", align: "RIGHT", width: 0.25, bold: true }
-	]);
-
-	printer.drawLine();
-	printer.bold(false);
-
-	for (i = 0; i < param.Productos.length; i++) {
+		printer.println(fecha_hora_actual)
+		printer.newLine();
 		//Impresion de Nota de Venta
 		printer.tableCustom([
-			{ text: param.Productos[i].Cantidad, align: "LEFT", width: 0.15 },
-			{ text: param.Productos[i].Nom_Producto, align: "LEFT", width: 0.5 },
-			{
-				text: (param.Productos[i].PrecioUnitario).toFixed(2),
-				align: "RIGHT", width: 0.15
-			},
-			{ text: (parseFloat(param.Productos[i].PrecioUnitario) * parseFloat(param.Productos[i].Cantidad)).toFixed(2), align: "RIGHT", width: 0.15 }
+			{ text: "Cant.", align: "LEFT", width: 0.15, bold: true },
+			{ text: "Descripcion", align: "LEFT", width: 0.45, bold: true },
+			{ text: "P.U", align: "LEFT", width: 0.10, bold: true },
+			{ text: "SubT", align: "RIGHT", width: 0.25, bold: true }
 		]);
-	}
-	printer.drawLine();
-	printer.alignRight();
-	printer.println("Total: " + (param.Total).toFixed(2));
-	printer.newLine();
-	//printer.cut();
-	printer.execute(function (err) {
-		if (err) {
-			console.error("Print failed", err);
-		} else {
 
-			console.log("Print done");
+		printer.drawLine();
+		printer.bold(false);
+
+		for (i = 0; i < Productos.length; i++) {
+			//Impresion de Nota de Venta
+			var found = ProductosDetalles.find(p => parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle));
+			if (found) {
+				printer.tableCustom([
+					{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.10 },
+					{ text: Productos[i].Nom_Producto.substring(0, 18), align: "LEFT", width: 0.4 },
+					{
+						text: (Productos[i].PrecioUnitario).toFixed(2),
+						align: "RIGHT", width: 0.15
+					},
+					{ text: (parseFloat(Productos[i].PrecioUnitario) * parseFloat(Productos[i].Cantidad)).toFixed(2), align: "RIGHT", width: 0.15 }
+				]);
+				ProductosDetalles = ProductosDetalles.filter(p => {
+					if (parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle)) {
+						printer.tableCustom([
+							{ text: "", align: "LEFT", width: 0.10 },
+							{ text:  p.Cantidad + " " + p.Nom_Producto.substring(0, 18), align: "LEFT", width: 0.4 },
+							{
+								text: (p.PrecioUnitario).toFixed(2),
+								align: "RIGHT", width: 0.15
+							},
+							{ text: (parseFloat(p.PrecioUnitario) * parseFloat(p.Cantidad)).toFixed(2), align: "RIGHT", width: 0.15 }
+						]);
+						return null
+					} else {
+						return p
+					}
+				})
+			} else {
+				printer.tableCustom([
+					{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.10 },
+					{ text: Productos[i].Nom_Producto.substring(0, 18), align: "LEFT", width: 0.4 },
+					{
+						text: (Productos[i].PrecioUnitario).toFixed(2),
+						align: "RIGHT", width: 0.15
+					},
+					{ text: (parseFloat(Productos[i].PrecioUnitario) * parseFloat(Productos[i].Cantidad)).toFixed(2), align: "RIGHT", width: 0.15 }
+				]);
+			}
+			
 		}
-	});
+		printer.drawLine();
+		printer.alignRight();
+		printer.println("Total: " + (param.Total).toFixed(2));
+		printer.newLine();
+		printer.cut();
+		printer.execute(function (err) {
+			if (err) {
+				console.error("Print failed", err);
+			} else {
+
+				console.log("Print done");
+			}
+		});
+	}); // Print PNG image (uses callback)
+
 }
 app.get('/', function (req, res) {
 	const db = require('../connectionbd')
@@ -555,8 +606,8 @@ app.post('/login_', function (req, res) {
 	const params = { username: req.body.username, password: req.body.password }
 	//call Model.login function
 	account.login(params, function (err, account) {
-		if (err) return res.json({err})
-		return res.json({account})
+		if (err) return res.json({ err })
+		return res.json({ account })
 	})
 })
 app.post('/api/photo', function (req, res) {
@@ -617,8 +668,6 @@ app.post('/confirmar_pedido_sql', function (req, res) {
 	const Cod_Vendedor = req.body.Cod_Vendedor
 
 	executeSP_Guardar_Comanda(res, 'USP_CAJ_COMPROBANTE_PAGO_G_Comanda', { Cod_Mesa, Productos, Cod_Moneda, Numero, Nom_Cliente, Total, Cod_Vendedor, Estado_Mesa })
-
-
 })
 app.post('/get_productos_by_mesa', function (req, res) {
 	const Cod_Mesa = req.body.Cod_Mesa
@@ -644,6 +693,18 @@ app.post('/Cancelar_Mesa_Pedido', function (req, res) {
 	executeSP_CANCELAR_PEDIDO_MESA(res, 'USP_CAJ_COMANDA_CANCELAR_Pedido', { Cod_Mesa, Numero })
 })
 
+app.post('/impresion_nota_venta', function (req, res) {
+	const Cod_Mesa = req.body.Cod_Mesa
+	const Productos = req.body.Productos
+	const Cod_Moneda = req.body.Cod_Moneda
+	const Numero = req.body.Numero
+	const Nom_Cliente = req.body.Nom_Cliente
+	const Total = req.body.Total
+	const Estado_Mesa = req.body.Estado_Mesa
+	const Cod_Vendedor = req.body.Cod_Vendedor
 
+	ImpresionNotaVenta( { Cod_Mesa, Productos, Cod_Moneda, Numero, Nom_Cliente, Total, Cod_Vendedor, Estado_Mesa },Numero)
+	res.json({ respuesta: 'ok', Numero })
+})
 
 

@@ -25,7 +25,7 @@ app.on('ready', function () {
     frame: true,
   });
 
-  mainWindow.setMenu(null);
+  //mainWindow.setMenu(null);
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
