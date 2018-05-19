@@ -472,80 +472,82 @@ var executeSP_CANCELAR_PEDIDO_MESA = function (res, store_procedure, param) {
 	});
 }
 function ImpresionComanda(param, Numero, posicion_impresora) {
-	const Productos = (param.Productos.filter(p => p.Cod_Almacen == IMPRESORAS_RUTAS[posicion_impresora].Cod_Almacen)).filter(p => parseInt(p.Id_Producto) != 0)
-	var ProductosDetalles = (param.Productos.filter(p => p.Cod_Almacen == IMPRESORAS_RUTAS[posicion_impresora].Cod_Almacen)).filter(p => parseInt(p.Id_Producto) == 0)
-	
-	if (Productos.length > 0) {
-		//Impresion de Comanda
-		var printer = require("node-thermal-printer");
-		printer.init({
-			type: 'epson',
-			interface: IMPRESORAS_RUTAS[posicion_impresora].Nom_Impresora,//'tcp://192.168.1.188',
-			// removeSpecialCharacters: true,
-		});
-		//printer.setTypeFontB(); 
-		printer.alignCenter()
-		printer.bold(true);
-		printer.setTextQuadArea();
-		printer.println("MISKY")
-		printer.bold(false);
-		printer.setTextNormal();
-		printer.drawLine();
-		printer.println(param.Cod_Mesa + " - " + Numero + " - " + param.Cod_Vendedor)
-		d = new Date()
-		day = d.getDate(); month = d.getMonth() + 1; year = d.getFullYear()
-		h = d.getHours(); m = d.getMinutes(); s = d.getSeconds()
-		fecha_hora_actual = (day < 10 ? "0" + day : day) + "-" + (month < 10 ? "0" + month : month) + "-" + year + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
+	if (IMPRESORAS_RUTAS.length > 0) {
+		const Productos = (param.Productos.filter(p => p.Cod_Almacen == IMPRESORAS_RUTAS[posicion_impresora].Cod_Almacen)).filter(p => parseInt(p.Id_Producto) != 0)
+		var ProductosDetalles = (param.Productos.filter(p => p.Cod_Almacen == IMPRESORAS_RUTAS[posicion_impresora].Cod_Almacen)).filter(p => parseInt(p.Id_Producto) == 0)
 
-		printer.println(fecha_hora_actual)
-		printer.newLine();
-		printer.tableCustom([
-			{ text: "Cant.", align: "LEFT", width: 0.15, bold: true },
-			{ text: "Producto", align: "LEFT", width: 0.75, bold: true }
-		]);
+		if (Productos.length > 0) {
+			//Impresion de Comanda
+			var printer = require("node-thermal-printer");
+			printer.init({
+				type: 'epson',
+				interface: IMPRESORAS_RUTAS[posicion_impresora].Nom_Impresora,//'tcp://192.168.1.188',
+				// removeSpecialCharacters: true,
+			});
+			//printer.setTypeFontB(); 
+			printer.alignCenter()
+			printer.bold(true);
+			printer.setTextQuadArea();
+			printer.println("MISKY")
+			printer.bold(false);
+			printer.setTextNormal();
+			printer.drawLine();
+			printer.println(param.Cod_Mesa + " - " + Numero + " - " + param.Cod_Vendedor)
+			d = new Date()
+			day = d.getDate(); month = d.getMonth() + 1; year = d.getFullYear()
+			h = d.getHours(); m = d.getMinutes(); s = d.getSeconds()
+			fecha_hora_actual = (day < 10 ? "0" + day : day) + "-" + (month < 10 ? "0" + month : month) + "-" + year + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
 
-		printer.drawLine();
-		printer.bold(false);
-		for (i = 0; i < Productos.length; i++) {
-			var found = ProductosDetalles.find(p => parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle));
-			if (found) {
-				printer.tableCustom([
-					{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
-					{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
-				]);
-				ProductosDetalles = ProductosDetalles.filter(p => {
-					if (parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle)) {
-						printer.tableCustom([
-							{ text: "", align: "LEFT", width: 0.15 },
-							{ text: p.Cantidad + " " + p.Nom_Producto, align: "LEFT", width: 0.75 }
-						]);
-						return null
-					} else {
-						return p
-					}
-				})
-			} else {
-				printer.tableCustom([
-					{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
-					{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
-				]);
-			}
+			printer.println(fecha_hora_actual)
+			printer.newLine();
+			printer.tableCustom([
+				{ text: "Cant.", align: "LEFT", width: 0.15, bold: true },
+				{ text: "Producto", align: "LEFT", width: 0.75, bold: true }
+			]);
 
-		}
-		printer.cut();
-		printer.execute(function (err) {
-			if (err) {
-				console.error("Print failed", err);
-			} else {
-				if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
-					ImpresionComanda(param, Numero, posicion_impresora + 1)
+			printer.drawLine();
+			printer.bold(false);
+			for (i = 0; i < Productos.length; i++) {
+				var found = ProductosDetalles.find(p => parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle));
+				if (found) {
+					printer.tableCustom([
+						{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
+						{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
+					]);
+					ProductosDetalles = ProductosDetalles.filter(p => {
+						if (parseInt(p.Id_Referencia) == parseInt(Productos[i].Id_Detalle)) {
+							printer.tableCustom([
+								{ text: "", align: "LEFT", width: 0.15 },
+								{ text: p.Cantidad + " " + p.Nom_Producto, align: "LEFT", width: 0.75 }
+							]);
+							return null
+						} else {
+							return p
+						}
+					})
+				} else {
+					printer.tableCustom([
+						{ text: "(" + Productos[i].Cantidad + ")", align: "LEFT", width: 0.15 },
+						{ text: Productos[i].Nom_Producto, align: "LEFT", width: 0.75 }
+					]);
 				}
-				console.log("Print done");
+
 			}
-		});
-	}else{
-		if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
-			ImpresionComanda(param, Numero, posicion_impresora + 1)
+			printer.cut();
+			printer.execute(function (err) {
+				if (err) {
+					console.error("Print failed", err);
+				} else {
+					if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
+						ImpresionComanda(param, Numero, posicion_impresora + 1)
+					}
+					console.log("Print done");
+				}
+			});
+		} else {
+			if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
+				ImpresionComanda(param, Numero, posicion_impresora + 1)
+			}
 		}
 	}
 }
@@ -556,12 +558,12 @@ function ImpresionNotaVenta(param, Numero) {
 	var printer = require("node-thermal-printer");
 	printer.init({
 		type: 'epson',
-		interface: 'tcp://192.168.1.188',
+		interface: 'tcp://192.168.1.189',
 		removeSpecialCharacters: true,
 	});
 	//printer.setTypeFontB(); 
 	printer.alignCenter()
-	printer.printImage('./assets/img/misky192.png', function (done) {
+	printer.printImage(__dirname+'/misky192.png', function (done) {
 		printer.setTextNormal();
 		printer.drawLine();
 		printer.println("AV. SAN MARTIN NRO. 600 (ESQUINA CON PROL GRAU)")
