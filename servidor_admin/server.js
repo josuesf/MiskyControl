@@ -24,12 +24,19 @@ var querystring = require('querystring');
 server.listen(port, () => console.log('running by josuesf on ' + port));
 //------------ EVENTS SOCKET IO ----------------------
 io.sockets.on('connection', function (socket) {
+	console.log(socket.id)
 	//------------- event login -----------------------
 	socket.on('login_in', function (data) {
 		var user = (data.user).toUpperCase();
 		var password = md5(data.pass);
 		executeStoreProc(null, socket, 'USP_PRI_USUARIO_TXPK', { user, password })
 	});
+	socket.on('subscribeToTimer', (interval) => {
+		console.log('client is subscribing to timer with interval ', interval);
+		setInterval(() => {
+		  socket.emit('timer', new Date());
+		}, interval);
+	  });
 });
 //------------- EVENTS HTTP -----------------
 var storage = multer.diskStorage({
@@ -655,8 +662,8 @@ function ImpresionNotaVenta(param, Numero) {
 }
 
 app.get('/', function (req, res) {
-	console.log('\u00f1andu@gmail.com')
-	res.send("josue@gmail")
+	//io.sockets.emit('MSG'," Funciona")
+	res.json({respuesta:"josue@gmail"})
 });
 app.post('/login_', function (req, res) {
 	//call Model account
