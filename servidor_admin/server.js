@@ -222,6 +222,8 @@ var executeSP_GET_Mesas_Estado = function (res, store_procedure, param) {
 		}
 		else {
 			var request = new sql.Request(dbConn);
+			console.log(param.Cod_Ambiente)
+			request.input('Cod_Ambiente',sql.NVarChar(64),param.Cod_Ambiente)
 			request.execute(store_procedure, function (err, result) {
 				dbConn.close()
 				if (err) {
@@ -660,9 +662,22 @@ function ImpresionNotaVenta(param, Numero) {
 	}); // Print PNG image (uses callback)
 
 }
+function executeQuery(query,callback){
+	var dbConn=  new sql.Connection(dbConfig)
+	dbConn.connect(function(err){
+		if (err) return callback(err,undefined)
 
+		var request = new sql.Request(dbConn)
+		request.query(query,function(err,result){
+			return callback(err,result)
+		})
+	})
+}
 app.get('/', function (req, res) {
 	//io.sockets.emit('MSG'," Funciona")
+	executeQuery("select distinct Cod_Ambiente from VIS_MESAS where Cod_Ambiente<>''",(err,respuesta)=>{
+		console.log(err,respuesta)
+	})
 	res.json({respuesta:"josue@gmail"})
 });
 app.post('/login_', function (req, res) {
@@ -707,8 +722,16 @@ app.post('/get_productos_todos', function (req, res) {
 	executeSP_GET_Productos(res, 'USP_PRI_PRODUCTOSxTodos', undefined)
 })
 app.post('/get_mesas_estado', function (req, res) {
-	executeSP_GET_Mesas_Estado(res, 'USP_VIS_MESAS_TT')
+	executeSP_GET_Mesas_Estado(res, 'USP_VIS_MESAS_TT',req.body)
 })
+app.post('/get_ambientes', function(req,res){
+	// console.log('entro aqui')
+	executeQuery("select distinct Cod_Ambiente from VIS_MESAS where Cod_Ambiente<>''",(err,respuesta)=>{
+		// console.log(err,respuesta)
+		res.json({err,respuesta})
+	})
+})
+
 app.post('/hacer_pedido_sql', function (req, res) {
 	const Cod_Mesa = req.body.Cod_Mesa
 	const Productos = req.body.Productos
